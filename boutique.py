@@ -5,7 +5,7 @@ st.set_page_config(page_title="Boutique Africaine", layout="wide")
 st.title("🛍️ Boutique de Costumes Africains")
 st.write("Bienvenue dans notre boutique d'habits traditionnels africains")
 
-# Liste des produits
+
 products = [
     {
         "name": "Boubou Sénégalais",
@@ -24,7 +24,7 @@ products = [
     }
 ]
 
-# Panier
+
 if "cart" not in st.session_state:
     st.session_state.cart = []
 
@@ -40,7 +40,7 @@ for i, product in enumerate(products):
             st.session_state.cart.append(product)
             st.success("Produit ajouté au panier !")
 
-# Affichage du panier
+
 st.sidebar.title("🛒 Panier")
 
 total = 0

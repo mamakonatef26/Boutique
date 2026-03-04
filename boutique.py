@@ -2,68 +2,48 @@ import streamlit as st
 import urllib.parse
 
 # -------------------------
-# CONFIGURATION PAGE
+# CONFIG PAGE
 # -------------------------
-st.set_page_config(
-    page_title="Boutique Africaine",
-    page_icon="👗",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+st.set_page_config(page_title="Boutique Africaine", page_icon="👗", layout="wide")
 
 # -------------------------
-# STYLE CSS PERSONNALISÉ
+# STYLE CSS
 # -------------------------
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #FFF8E7;  /* couleur douce type sable */
-        font-family: 'Arial', sans-serif;
-    }
-    .stButton>button {
-        background-color: #FF7F50;  /* couleur corail */
-        color: white;
-        font-weight: bold;
-    }
-    .payment-icon {
-        height:30px;
-        margin-right:10px;
-    }
-    </style>
-    """, unsafe_allow_html=True
-)
+st.markdown("""
+<style>
+body {
+    background-color: #FFF8E7;
+    font-family: 'Arial', sans-serif;
+}
+.stButton>button {
+    background-color: #FF7F50;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+}
+.payment-icon {
+    height:30px;
+    margin-right:10px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------
-# MESSAGE DE BIENVENUE
+# HEADER
 # -------------------------
 st.markdown("## 👋 Bienvenue dans notre boutique de costumes africains !")
 st.markdown("Découvrez nos habits traditionnels et passez votre commande facilement.")
 
 # -------------------------
-# LISTE PRODUITS
+# PRODUITS
 # -------------------------
 products = [
-    {
-        "name": "Boubou Sénégalais",
-        "price": 35000,
-        "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"
-    },
-    {
-        "name": "Kaftan Royal",
-        "price": 45000,
-        "image": "https://images.unsplash.com/photo-1593032465175-481ac7f401a0"
-    },
-    {
-        "name": "Robe Africaine Wax",
-        "price": 25000,
-        "image": "https://images.unsplash.com/photo-1618354691373-d851c5c3a1f9"
-    }
+    {"name": "Boubou Sénégalais", "price": 35000, "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"},
+    {"name": "Kaftan Royal", "price": 45000, "image": "https://images.unsplash.com/photo-1593032465175-481ac7f401a0"},
+    {"name": "Robe Africaine Wax", "price": 25000, "image": "https://images.unsplash.com/photo-1618354691373-d851c5c3a1f9"}
 ]
 
-# -------------------------
-# PANIER
-# -------------------------
 if "cart" not in st.session_state:
     st.session_state.cart = []
 
@@ -78,9 +58,9 @@ for i, product in enumerate(products):
             st.success(f"✅ {product['name']} ajouté au panier !")
 
 # -------------------------
-# PANIER SIDEBAR
+# PANIER
 # -------------------------
-st.sidebar.title("🛒 Votre panier")
+st.sidebar.title("🛒 Panier")
 total = 0
 for item in st.session_state.cart:
     st.sidebar.write(f"- {item['name']} ({item['price']} XOF)")
@@ -88,30 +68,21 @@ for item in st.session_state.cart:
 st.sidebar.write(f"### Total : {total} XOF")
 
 # -------------------------
-# FORMULAIRE COMMANDE
+# FORMULAIRE CLIENT
 # -------------------------
 st.markdown("---")
 st.header("📦 Finaliser la commande")
-
 name = st.text_input("Nom complet")
 phone = st.text_input("Numéro WhatsApp (ex: 2217XXXXXXX)")
 address = st.text_area("Adresse de livraison")
 
-# -------------------------
-# CHOIX MODE DE PAIEMENT AVEC ICONES
-# -------------------------
 payment_method = st.radio(
     "Mode de paiement",
-    [
-        "PayPal 🅿️",
-        "Wave 💧",
-        "Orange Money 🍊",
-        "Espèces 💵"
-    ]
+    ["PayPal 🅿️", "Wave 💧", "Orange Money 🍊", "Espèces 💵"]
 )
 
 # -------------------------
-# BOUTON CONFIRMATION
+# BOUTON VALIDER
 # -------------------------
 if st.button("Valider la commande"):
 
@@ -120,7 +91,7 @@ if st.button("Valider la commande"):
     elif not name or not phone or not address:
         st.warning("⚠️ Merci de remplir toutes vos informations")
     else:
-        # Création du message WhatsApp
+        # Message WhatsApp
         order_details = ""
         for item in st.session_state.cart:
             order_details += f"{item['name']} - {item['price']} XOF\n"
@@ -140,15 +111,14 @@ Mode de paiement: {payment_method}
 """
         encoded_message = urllib.parse.quote(message)
 
-        whatsapp_number = "2217XXXXXXXX"  # ton numéro WhatsApp
+        # Ton numéro WhatsApp
+        whatsapp_number = "2217XXXXXXXX"
         whatsapp_url = f"https://wa.me/{whatsapp_number}?text={encoded_message}"
 
-        st.success("✅ Merci pour votre commande !")
+        st.success("✅ Merci pour votre commande ! Cliquez ci-dessous pour envoyer sur WhatsApp")
         st.markdown(f"[📲 Envoyer la commande sur WhatsApp]({whatsapp_url})", unsafe_allow_html=True)
 
-        # -------------------------
-        # ANALYSE RAPIDE DE LA COMMANDE
-        # -------------------------
+        # Analyse simple
         st.markdown("### 📊 Analyse de la commande")
         st.write(f"Nombre d'articles : {len(st.session_state.cart)}")
         st.write(f"Montant total : {total} XOF")
